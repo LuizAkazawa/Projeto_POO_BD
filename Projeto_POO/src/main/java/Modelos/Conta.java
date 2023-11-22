@@ -90,6 +90,10 @@ public abstract class Conta {
 
     }
 
+    public void mostra_acoes(Conta c){
+        contaDAO.mostraAcoesPossui(c);
+    }
+
     public void mostrar_info(){
 
     }

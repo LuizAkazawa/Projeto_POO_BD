@@ -16,16 +16,20 @@ public class Main {
         /*
         IMPLEMENTANDO CADASTRAR_CONTA NO HOMEBROKER - OK
         FAZER AÇÕES - OK
-        FAZER FIIS
-
         CADASTRO DE USUARIOS E DE CONTAS VAI SER ESTATICO - X
-        FOCAR MAIS NAS AÇÕES
+        FOCAR MAIS NAS AÇÕES OK
         FAZER UM SISTEMA DE LOGIN COM USERNAME E SENHA - OK
+        CADASTRO DE USUARIOS E DE CONTAS VAI SER ESTATICO - X
+        FOCAR MAIS NAS AÇÕES OK
+        COMPRA DE AÇÕES E VENDA VAI SER REALIZADO ALTERANDO O "CONTA_HAS_ACOES". OK
+        ARRUMAR A ADIÇÃO DE AÇÕES AO COMPRAR -> SOMAR AO INVÉS DE SUBSTITUIR OK
 
-        COMPRA DE AÇÕES E VENDA VAI SER REALIZADO ALTERANDO O "CONTA_HAS_ACOES".
+        FAZER O MÉTODO DE VENDER AÇÕES
+        FAZER FIIS
+        FAZER COMPRAR E VENDER FIIs
 
-        ARRUMAR A ADIÇÃO DE AÇÕES AO COMPRAR -> SOMAR AO INVÉS DE SUBSTITUIR
-        ADICIONAR O MÉTODO DE VENDER AÇÕES E AJUSTAR IGUALMENTE O MÉTODO DE COMPRA
+
+        ARRUMAR O POSSUI AÇÕES ??
          */
 
         UserDAO userDAO= new UserDAO();
@@ -108,7 +112,7 @@ public class Main {
                                 break;
                             case 4:
                                 //MOSTRAR TODAS AS CONTAS
-                                contaDAO.selectUser();
+                                contaDAO.selectConta();
                                 break;
                             case 5:
                                 //REMOVER CONTA
@@ -231,6 +235,8 @@ public class Main {
                     System.out.println("2 - Sacar: ");
                     System.out.println("3 - Mostrar saldo: ");
                     System.out.println("4 - Comprar ação: ");
+                    System.out.println("5 - Vender ação: ");
+                    System.out.println("6 - Mostrar ações que possuo: ");
                     System.out.println("8 - Sair: ");
                     op = sc.nextInt();
                     while(op != 8){
@@ -263,7 +269,14 @@ public class Main {
                                 //Compra ação
                                 conta_logado.comprarAcao(conta_logado);
                                 break;
+                            case 5:
+                                //vender açoes
+                                break;
 
+                            case 6:
+                                //mostrar ações que possuo
+                                conta_logado.mostra_acoes(conta_logado);
+                                break;
 
                         }
 
@@ -271,6 +284,9 @@ public class Main {
                         System.out.println("1 - Depositar: ");
                         System.out.println("2 - Sacar: ");
                         System.out.println("3 - Mostrar saldo: ");
+                        System.out.println("4 - Comprar ação: ");
+                        System.out.println("5 - Vender ação: ");
+                        System.out.println("6 - Mostrar ações que possuo: ");
                         System.out.println("8 - Sair: ");
                         op = sc.nextInt();
                     }

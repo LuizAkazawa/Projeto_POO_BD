@@ -28,7 +28,7 @@ public class ContaDAO extends ConnectionDAO{
             pst.execute();
             sucesso = true;
         } catch (SQLException exc) {
-            System.out.println("Erro1: " + exc.getMessage());
+            System.out.println("Erro1_conta: " + exc.getMessage());
             System.out.println("aaaaaaaaaaaaaaa");
             sucesso = false;
         } finally {
@@ -36,7 +36,7 @@ public class ContaDAO extends ConnectionDAO{
                 con.close();
                 pst.close();
             } catch (SQLException exc) {
-                System.out.println("Erro2: " + exc.getMessage());
+                System.out.println("Erro2_conta: " + exc.getMessage());
             }
         }
         return sucesso;
@@ -54,10 +54,11 @@ public class ContaDAO extends ConnectionDAO{
             a = new Acao(rs.getString("sigla"), rs.getDouble("cotacao"), rs.getString("empresa_proprietaria"));
             return a;
         } catch (SQLException e) {
-            System.out.println("ErroCheck: " + e);
+            System.out.println("ErroCheck_conta: " + e);
             return null;
         }
     }
+
 
     public Acao qtdAcoes(Conta c, String sigla){
 
@@ -71,9 +72,50 @@ public class ContaDAO extends ConnectionDAO{
             a = new Acao(rs.getString("sigla"), rs.getDouble("cotacao"), rs.getString("empresa_proprietaria"));
             return a;
         } catch (SQLException e) {
-            System.out.println("ErroCheck: " + e);
+            System.out.println("ErroCheck2_conta: " + e);
             return null;
         }
+    }
+
+    public int  hasAcoes(Conta c, String sigla){
+        connectToDB();
+        sigla = "'" + sigla + "'";
+        String sql = "SELECT quantidade FROM Conta_has_Acoes WHERE Acoes_siglaAcoes = " + sigla + " and Conta_codConta = " + c.getCod_conta();
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+            if(rs.next()){
+                return rs.getInt("quantidade");
+            }
+        } catch (SQLException e) {
+            System.out.println("ErroCheck3_conta: " + e);
+            return 0;
+        }
+        return 0;
+    }
+
+    public boolean updateConta_has_Acoes(Conta c, String sigla, int qtd) {
+        connectToDB();
+        String sql = "UPDATE Conta_has_Acoes SET quantidade=? where Acoes_siglaAcoes=? and Conta_codConta=?";
+        try {
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, qtd);
+            pst.setString(2,sigla);
+            pst.setInt(3,c.getCod_conta());
+            pst.execute();
+            sucesso = true;
+        } catch (SQLException ex) {
+            System.out.println("Erro4_conta = " + ex.getMessage());
+            sucesso = false;
+        } finally {
+            try {
+                con.close();
+                pst.close();
+            } catch (SQLException exc) {
+                System.out.println("Erro5_conta: " + exc.getMessage());
+            }
+        }
+        return sucesso;
     }
 
     public boolean insertConta_has_Acoes(Conta c, String sigla, int qtd) {
@@ -86,20 +128,22 @@ public class ContaDAO extends ConnectionDAO{
             pst = con.prepareStatement(sql);
             pst.setInt(1, c.getCod_conta());
             pst.setString(2, a.getSigla());
-            pst.setInt(3, qtd);
-
-            pst.execute();
+            if(hasAcoes(c, sigla) != 0){
+                updateConta_has_Acoes(c, sigla, qtd + hasAcoes(c, sigla));
+            }else{
+                pst.setInt(3, qtd);
+                pst.execute();
+            }
             sucesso = true;
         } catch (SQLException exc) {
-            System.out.println("Erro1: " + exc.getMessage());
-            System.out.println("aaaaaaaaaaaaaaa");
+            System.out.println("Erro6_conta: " + exc.getMessage());
             sucesso = false;
         } finally {
             try {
                 con.close();
                 pst.close();
             } catch (SQLException exc) {
-                System.out.println("Erro2: " + exc.getMessage());
+                System.out.println("Erro7_conta: " + exc.getMessage());
             }
         }
         return sucesso;
@@ -147,14 +191,14 @@ public class ContaDAO extends ConnectionDAO{
             pst.execute();
             sucesso = true;
         } catch (SQLException ex) {
-            System.out.println("Erro = " + ex.getMessage());
+            System.out.println("Erro8_conta = " + ex.getMessage());
             sucesso = false;
         } finally {
             try {
                 con.close();
                 pst.close();
             } catch (SQLException exc) {
-                System.out.println("Erro: " + exc.getMessage());
+                System.out.println("Erro9_conta: " + exc.getMessage());
             }
         }
         return sucesso;
@@ -184,7 +228,6 @@ public class ContaDAO extends ConnectionDAO{
         return sucesso;
     }
 
-
     //TYPE CHECK
     public String checkTipo(Conta c){
         connectToDB();
@@ -200,9 +243,22 @@ public class ContaDAO extends ConnectionDAO{
         }
     }
 
+    public void mostraAcoesPossui(Conta c){
+        connectToDB();
+        String sql = "SELECT * FROM Conta_has_Acoes WHERE Conta_codConta = " + c.getCod_conta();
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+            while(rs.next()){
+                System.out.println(rs.getString("Acoes_siglaAcoes") + " : " + rs.getInt("quantidade"));
+            }
+        } catch (SQLException e) {
+            System.out.println("ErroCheck: " + e);
+        }
+    }
 
     //SELECT
-    public ArrayList<Conta> selectUser() {
+    public ArrayList<Conta> selectConta() {
         ArrayList<Conta> contas = new ArrayList<>();
         connectToDB();
         String sql = "SELECT * FROM Conta";
