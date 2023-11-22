@@ -42,6 +42,69 @@ public class ContaDAO extends ConnectionDAO{
         return sucesso;
     }
 
+    public Acao infoAcoes(String sigla){
+        connectToDB();
+        sigla = "'" + sigla + "'";
+        String sql = "SELECT * FROM Acoes WHERE sigla = " + sigla;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+            rs.next();
+            Acao a = null;
+            a = new Acao(rs.getString("sigla"), rs.getDouble("cotacao"), rs.getString("empresa_proprietaria"));
+            return a;
+        } catch (SQLException e) {
+            System.out.println("ErroCheck: " + e);
+            return null;
+        }
+    }
+
+    public Acao qtdAcoes(Conta c, String sigla){
+
+        connectToDB();
+        String sql = "SELECT quantidade FROM Conta_has_Acoes WHERE Acoes_siglaAcoes = " + sigla;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+            rs.next();
+            Acao a = null;
+            a = new Acao(rs.getString("sigla"), rs.getDouble("cotacao"), rs.getString("empresa_proprietaria"));
+            return a;
+        } catch (SQLException e) {
+            System.out.println("ErroCheck: " + e);
+            return null;
+        }
+    }
+
+    public boolean insertConta_has_Acoes(Conta c, String sigla, int qtd) {
+
+        connectToDB();
+        Acao a = infoAcoes(sigla);
+
+        String sql = "INSERT INTO Conta_has_Acoes (Conta_codConta, Acoes_siglaAcoes, quantidade) values(?,?,?)";
+        try {
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, c.getCod_conta());
+            pst.setString(2, a.getSigla());
+            pst.setInt(3, qtd);
+
+            pst.execute();
+            sucesso = true;
+        } catch (SQLException exc) {
+            System.out.println("Erro1: " + exc.getMessage());
+            System.out.println("aaaaaaaaaaaaaaa");
+            sucesso = false;
+        } finally {
+            try {
+                con.close();
+                pst.close();
+            } catch (SQLException exc) {
+                System.out.println("Erro2: " + exc.getMessage());
+            }
+        }
+        return sucesso;
+    }
+
     /*
     //UPDATE
     public boolean updateConta(String cpf, String colunaMudanca, String novoDado) {
@@ -213,6 +276,7 @@ public class ContaDAO extends ConnectionDAO{
                 }else if(rs.getString("tipo_conta").equals("Black")){
                     contaAux = new Conta_Black(rs.getString("username"),rs.getString("senha"),rs.getString("tipo_conta"), rs.getDouble("saldo"), rs.getString("data_criacao"), rs.getString("Usuario_cpfUsuario"));
                 }
+                contaAux.setCod_conta(rs.getInt("cod_conta"));
 /*
                 System.out.println("nome = " + contaAux.getNome());
                 System.out.println("cpf = " + contaAux.getCpf());
@@ -234,6 +298,13 @@ public class ContaDAO extends ConnectionDAO{
             }
         }
         return contaAux;
+    }
+
+    public void comprarAcao(String sigla, int qtd){
+
+    }
+    public void venderAcao(Conta c, String sigla, int qtd){
+
     }
 
 }

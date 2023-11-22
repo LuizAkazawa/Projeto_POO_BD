@@ -1,5 +1,6 @@
 package Main;
 
+import DAO.AcaoDAO;
 import DAO.ContaDAO;
 import DAO.HomebrokerDAO;
 import DAO.UserDAO;
@@ -13,44 +14,53 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         /*
-        IMPLEMENTANDO CADASTRAR_CONTA NO HOMEBROKER
-        FAZER AÇÕES
+        IMPLEMENTANDO CADASTRAR_CONTA NO HOMEBROKER - OK
+        FAZER AÇÕES - OK
         FAZER FIIS
-        FAZER RANDOMIZAÇÃO DAS COTAÇÕES
 
-        CADASTRO DE USUARIOS E DE CONTAS VAI SER ESTATICO
+        CADASTRO DE USUARIOS E DE CONTAS VAI SER ESTATICO - X
         FOCAR MAIS NAS AÇÕES
-        FAZER UM SISTEMA DE LOGIN COM USERNAME E SENHA
+        FAZER UM SISTEMA DE LOGIN COM USERNAME E SENHA - OK
 
         COMPRA DE AÇÕES E VENDA VAI SER REALIZADO ALTERANDO O "CONTA_HAS_ACOES".
+
+        ARRUMAR A ADIÇÃO DE AÇÕES AO COMPRAR -> SOMAR AO INVÉS DE SUBSTITUIR
+        ADICIONAR O MÉTODO DE VENDER AÇÕES E AJUSTAR IGUALMENTE O MÉTODO DE COMPRA
          */
 
         UserDAO userDAO= new UserDAO();
         HomebrokerDAO homebrokerDAO = new HomebrokerDAO();
         ContaDAO contaDAO = new ContaDAO();
+        AcaoDAO acaoDAO = new AcaoDAO();
 
         Homebroker h1 = new Homebroker("www.naosei.com", "1");
 
-        Usuario u1 = new Usuario("a", "u2@gmail.com","123", "2023-11-20", "1"); //ANO-MES-DIA
-        Usuario u2 = new Usuario("c", "u2@gmail.com", "3123","2023-11-20", "1");
+        Usuario u1 = new Usuario("Luiz Akazawa", "luiz@gmail.com","123", "2023-11-20", "1"); //ANO-MES-DIA
+        Usuario u2 = new Usuario("Maria Seilá", "maria@gmail.com", "3123","2023-11-20", "1");
 
-        Conta c1 = new Conta_Black("Luiz", "12345", "Black", 12345.20, "2023-10-12", "123");
+        Conta c1 = new Conta_Black("Luiz", "12345", "Black", 12345.20, "2023-11-12", "123");
         Conta c2 = new Conta_Gold("Marie", "54321", "Gold", 145.20, "2023-11-30", "3123");
 
-        Acao a1 = new Acao("FLRY3", 20.34, "Fleury");
-        Acao a2 = new Acao("MGLU3", 2.22, "Magazine Luiza");
-        Acao a3 = new Acao("BBAS3", 50.66, "Banco do Brasil");
+        Acao fleury = new Acao("FLRY3", 20.34, "Fleury");
+        Acao magalu = new Acao("MGLU3", 2.22, "Magazine Luiza");
+        Acao bb = new Acao("BBAS3", 50.66, "Banco do Brasil");
 
 
         homebrokerDAO.insertHB(h1);
+
         userDAO.insertUser(u1);
         userDAO.insertUser(u2);
+
         contaDAO.insertConta(c1);
         contaDAO.insertConta(c2);
 
+        acaoDAO.insertAcao(fleury);
+        acaoDAO.insertAcao(magalu);
+        acaoDAO.insertAcao(bb);
 
         //userDAO.selectUser();
         //contaDAO.selectUser();
+
 
         //userDAO.updateUser("123", "nome", "Jorge");
 
@@ -193,7 +203,7 @@ public class Main {
                     break;
                 //USUARIO
                 case 2:
-                    //primeiro -> sessão para validar login; dar opções de visualização da conta de acordo com o tipo_conta;
+                    //primeiro -> sessão para validar login; dar opções de visualização da conta de acordo com o tipo_conta; OK
                     //CRIAR FUNÇÃO PARA CHECKAR SE O USERNAME E A SENHA ESTÃO CORRETOS
                     sc.nextLine();
                     String username_login;
@@ -207,6 +217,7 @@ public class Main {
                         conta_logado = contaDAO.contaLoga(username_login, senha_login);
                         try{
                             System.out.println("================= " + conta_logado.getUsername() + " está logado! =================");
+                            //System.out.println(conta_logado.getCod_conta());
                         }catch(NullPointerException e){
                             System.out.println("Usuario ou senha inválida");
                         }
@@ -214,10 +225,13 @@ public class Main {
 
                     double deposito;
                     double sacar;
+                    System.out.println("CODIGO DA CONTA" + conta_logado.getCod_conta());
                     System.out.println("Selecione a ação que deseja executar: ");
                     System.out.println("1 - Depositar: ");
                     System.out.println("2 - Sacar: ");
                     System.out.println("3 - Mostrar saldo: ");
+                    System.out.println("4 - Comprar ação: ");
+                    System.out.println("8 - Sair: ");
                     op = sc.nextInt();
                     while(op != 8){
                         sc.nextLine();
@@ -244,12 +258,20 @@ public class Main {
                             case 3:
                                 conta_logado.mostrar_saldo();
                                 break;
+
+                            case 4:
+                                //Compra ação
+                                conta_logado.comprarAcao(conta_logado);
+                                break;
+
+
                         }
 
                         System.out.println("Selecione a ação que deseja executar: ");
                         System.out.println("1 - Depositar: ");
                         System.out.println("2 - Sacar: ");
                         System.out.println("3 - Mostrar saldo: ");
+                        System.out.println("8 - Sair: ");
                         op = sc.nextInt();
                     }
                     break; //break do modo visu

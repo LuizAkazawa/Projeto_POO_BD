@@ -1,6 +1,7 @@
 package DAO;
 
 import Modelos.Acao;
+import Modelos.Conta;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

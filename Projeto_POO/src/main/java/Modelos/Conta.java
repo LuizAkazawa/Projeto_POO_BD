@@ -4,6 +4,7 @@ import DAO.ContaDAO;
 import excecoes.SaldoInsuficiente;
 
 import java.util.Date;
+import java.util.Scanner;
 
 public abstract class Conta {
     private static int cod_conta;
@@ -15,6 +16,7 @@ public abstract class Conta {
     private String cpfUsuario;
 
     ContaDAO contaDAO = new ContaDAO();
+    Scanner sc = new Scanner(System.in);
 
     public Conta(String username, String senha, String tipo_conta, double saldo, String data_criacao, String cpfUsuario) {
         this.username = username;
@@ -40,7 +42,51 @@ public abstract class Conta {
         System.out.println("Saldo = " + String.format("%.2f", this.saldo));
     }
 
-    public void vender_acao(String acao){
+    public void comprarAcao(Conta c) {
+        int numAcao;
+        String sigla = "";
+        int qtd;
+        double custo;
+        Acao a = null;
+
+        System.out.println("Selecione uma ação: ");
+        System.out.println("1 - Fleury");
+        System.out.println("2 - Magalu");
+        System.out.println("3 - Banco do Brasil");
+        numAcao = sc.nextInt();
+
+        while (numAcao < 1 || numAcao > 3) {
+            System.out.println("Digite um numero valido: ");
+            numAcao = sc.nextInt();
+        }
+        switch (numAcao) {
+            case 1:
+                sigla = "FLRY3";
+                break;
+            case 2:
+                sigla = "MGLU3";
+                break;
+            case 3:
+                sigla = "BBAS3";
+                break;
+        }
+        System.out.println("Digite a quantidade: ");
+        qtd = sc.nextInt();
+
+        a = contaDAO.infoAcoes(sigla);
+        custo = a.getCotacao() * qtd;
+        System.out.println("CUSTO DA TRANSAÇÃO = " + custo);
+        try{
+            c.sacar(custo);
+            contaDAO.insertConta_has_Acoes(c, sigla, qtd);
+            System.out.println("Transação realizada !");
+        }catch(SaldoInsuficiente e){
+            System.out.println("Saldo insuficiente para cumprir a transação. O saldo não foi alterado");
+            System.out.println("Saldo atual: " + this.saldo);
+        }
+    }
+
+    public void venderAcao(){
 
     }
 
