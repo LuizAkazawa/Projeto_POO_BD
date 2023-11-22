@@ -1,6 +1,7 @@
 package Modelos;
 
 import DAO.ContaDAO;
+import excecoes.SaldoInsuficiente;
 
 import java.util.Date;
 
@@ -24,7 +25,22 @@ public abstract class Conta {
         this.cpfUsuario = cpfUsuario;
     }
 
-    public void vender_acao(){
+    public void sacar(double qtd) throws SaldoInsuficiente {
+        if(saldo >= qtd){
+            this.saldo -= qtd;
+        }else{
+            throw new SaldoInsuficiente();
+        }
+    }
+    public void depositar(double qtd){
+        this.saldo += qtd;
+    }
+
+    public void mostrar_saldo(){
+        System.out.println("Saldo = " + String.format("%.2f", this.saldo));
+    }
+
+    public void vender_acao(String acao){
 
     }
 

@@ -42,8 +42,9 @@ public class ContaDAO extends ConnectionDAO{
         return sucesso;
     }
 
+    /*
     //UPDATE
-    public boolean updateConta(String colunaMudanca, Conta c) {
+    public boolean updateConta(String cpf, String colunaMudanca, String novoDado) {
         connectToDB();
 
         String sql = "UPDATE conta SET " + colunaMudanca + " =? where Usuario_cpfUsuario =?";
@@ -71,6 +72,31 @@ public class ContaDAO extends ConnectionDAO{
         }
         return sucesso;
     }
+    */
+
+    public boolean updateConta(String cpf, String mudaColuna, String mudanca) {
+        connectToDB();
+        String sql = "UPDATE conta SET " + mudaColuna + "=? where Usuario_cpfUsuario=?";
+        try {
+            pst = con.prepareStatement(sql);
+            pst.setString(1, mudanca);
+            pst.setString(2,cpf);
+            pst.execute();
+            sucesso = true;
+        } catch (SQLException ex) {
+            System.out.println("Erro = " + ex.getMessage());
+            sucesso = false;
+        } finally {
+            try {
+                con.close();
+                pst.close();
+            } catch (SQLException exc) {
+                System.out.println("Erro: " + exc.getMessage());
+            }
+        }
+        return sucesso;
+    }
+
 
     //DELETE
     public boolean deleteConta(String cpfUsuario) {
@@ -165,4 +191,49 @@ public class ContaDAO extends ConnectionDAO{
         }
         return contas;
     }
+
+    public Conta contaLoga(String usuario, String senha) {
+        Conta contaAux = null;
+        connectToDB();
+        usuario = "'"+usuario+"'"; //Adicionando aspas para o MYSQL reconhecer que é uma string
+        String sql = "SELECT * FROM conta WHERE username= "+usuario+" and senha = " + senha;
+
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+
+            //System.out.println("Lista de usuarios: ");
+
+            while (rs.next()) {
+
+                if(rs.getString("tipo_conta").equals("Gratuita")){
+                    contaAux = new Conta_Gratuita(rs.getString("username"),rs.getString("senha"),rs.getString("tipo_conta"), rs.getDouble("saldo"), rs.getString("data_criacao"), rs.getString("Usuario_cpfUsuario"));
+                }else if(rs.getString("tipo_conta").equals("Gold")){
+                    contaAux = new Conta_Black(rs.getString("username"),rs.getString("senha"),rs.getString("tipo_conta"), rs.getDouble("saldo"), rs.getString("data_criacao"), rs.getString("Usuario_cpfUsuario"));
+                }else if(rs.getString("tipo_conta").equals("Black")){
+                    contaAux = new Conta_Black(rs.getString("username"),rs.getString("senha"),rs.getString("tipo_conta"), rs.getDouble("saldo"), rs.getString("data_criacao"), rs.getString("Usuario_cpfUsuario"));
+                }
+/*
+                System.out.println("nome = " + contaAux.getNome());
+                System.out.println("cpf = " + contaAux.getCpf());
+                System.out.println("data_nascimento = " + contaAux.getData_nasc());
+                System.out.println("IP HOMEBROKER = " + contaAux.getIpHomebroker());
+                System.out.println("--------------------------------");
+ */
+            }
+            sucesso = true;
+        } catch (SQLException e) {
+            System.out.println("Erro: " + e.getMessage());
+            sucesso = false;
+        } finally {
+            try {
+                con.close();
+                st.close();
+            } catch (SQLException e) {
+                System.out.println("Erro: " + e.getMessage());
+            }
+        }
+        return contaAux;
+    }
+
 }

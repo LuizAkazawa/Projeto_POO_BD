@@ -42,14 +42,13 @@ public class UserDAO extends ConnectionDAO{
     }
 
     //UPDATE
-    public boolean updateUser(String cpf, Usuario user) {
+    public boolean updateUser(String cpf, String mudaColuna, String mudanca) {
         connectToDB();
-        String sql = "UPDATE usuario SET nome=?, cpf=?, data_nascimento=?, where cpf=?";
+        String sql = "UPDATE usuario SET " + mudaColuna + "=? where cpf=?";
         try {
             pst = con.prepareStatement(sql);
-            pst.setString(1, user.getNome());
-            pst.setString(2, user.getCpf());
-            pst.setString(3,cpf);
+            pst.setString(1, mudanca);
+            pst.setString(2,cpf);
             pst.execute();
             sucesso = true;
         } catch (SQLException ex) {
@@ -128,24 +127,34 @@ public class UserDAO extends ConnectionDAO{
         return users;
     }
 
-    //Coletando info
-    public Usuario coletaInfo(String cpf_search){
+    //COLETA INFO
+
+    public Usuario coletaInfo(String cpf) {
+        Usuario userAux = null;
         connectToDB();
-        String sql = "SELECT * FROM Usuario";
-        Usuario u;
-        try{
+        String sql = "SELECT * FROM usuario WHERE cpf = " + cpf;
+
+        try {
             st = con.createStatement();
             rs = st.executeQuery(sql);
-            //rs.next();
-            pst.setString(1, cpf_search);
-            pst.execute();
-            String data = String.valueOf(rs.getDate("data_nascimento"));
-            u = new Usuario(rs.getString("nome"),rs.getString("email"),rs.getString("cpf"), data, rs.getString("Homebroker_ipHomebroker"));
-            return u;
+
+            System.out.println("Lista de usuarios: ");
+
+            while (rs.next()) {
+
+                userAux = new Usuario(rs.getString("nome"),rs.getString("email"),rs.getString("cpf"), rs.getString("data_nascimento"), rs.getString("Homebroker_ipHomebroker"));
+
+                System.out.println("nome = " + userAux.getNome());
+                System.out.println("cpf = " + userAux.getCpf());
+                System.out.println("data_nascimento = " + userAux.getData_nasc());
+                System.out.println("IP HOMEBROKER = " + userAux.getIpHomebroker());
+                System.out.println("--------------------------------");
+            }
+            sucesso = true;
         } catch (SQLException e) {
-            System.out.println("ErroColeta: " + e);
-            return null;
-        }finally {
+            System.out.println("Erro: " + e.getMessage());
+            sucesso = false;
+        } finally {
             try {
                 con.close();
                 st.close();
@@ -153,7 +162,9 @@ public class UserDAO extends ConnectionDAO{
                 System.out.println("Erro: " + e.getMessage());
             }
         }
+        return userAux;
     }
+
 }
 
 
