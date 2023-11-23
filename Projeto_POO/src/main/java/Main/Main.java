@@ -23,12 +23,10 @@ public class Main {
         FOCAR MAIS NAS AÇÕES OK
         COMPRA DE AÇÕES E VENDA VAI SER REALIZADO ALTERANDO O "CONTA_HAS_ACOES". OK
         ARRUMAR A ADIÇÃO DE AÇÕES AO COMPRAR -> SOMAR AO INVÉS DE SUBSTITUIR OK
-
-        FAZER O MÉTODO DE VENDER AÇÕES
-        FAZER FIIS
-        FAZER COMPRAR E VENDER FIIs
+        FAZER O MÉTODO DE VENDER AÇÕES OK
 
 
+        ARRUMAR O GETPRICE ACOES
         ARRUMAR O POSSUI AÇÕES ??
          */
 
@@ -37,46 +35,13 @@ public class Main {
         ContaDAO contaDAO = new ContaDAO();
         AcaoDAO acaoDAO = new AcaoDAO();
 
+        //Registrando um homebroker para o Administrador fazer alterações
         Homebroker h1 = new Homebroker("www.naosei.com", "1");
-
-        Usuario u1 = new Usuario("Luiz Akazawa", "luiz@gmail.com","123", "2023-11-20", "1"); //ANO-MES-DIA
-        Usuario u2 = new Usuario("Maria Seilá", "maria@gmail.com", "3123","2023-11-20", "1");
-
-        Conta c1 = new Conta_Black("Luiz", "12345", "Black", 12345.20, "2023-11-12", "123");
-        Conta c2 = new Conta_Gold("Marie", "54321", "Gold", 145.20, "2023-11-30", "3123");
-
-        Acao fleury = new Acao("FLRY3", 20.34, "Fleury");
-        Acao magalu = new Acao("MGLU3", 2.22, "Magazine Luiza");
-        Acao bb = new Acao("BBAS3", 50.66, "Banco do Brasil");
-
-
-        homebrokerDAO.insertHB(h1);
-
-        userDAO.insertUser(u1);
-        userDAO.insertUser(u2);
-
-        contaDAO.insertConta(c1);
-        contaDAO.insertConta(c2);
-
-        acaoDAO.insertAcao(fleury);
-        acaoDAO.insertAcao(magalu);
-        acaoDAO.insertAcao(bb);
-
-        //userDAO.selectUser();
-        //contaDAO.selectUser();
-
-
-        //userDAO.updateUser("123", "nome", "Jorge");
-
-
-
-
-
 
         int modoVisualizacao;
         int op;
         System.out.println("Digite o modo de visualização: ");
-        System.out.println("1 - Admin: ");
+        System.out.println("1 - Administrador: ");
         System.out.println("2 - Usuario: ");
         System.out.println("3 - Finalizar programa: ");
         modoVisualizacao = sc.nextInt();
@@ -207,8 +172,6 @@ public class Main {
                     break;
                 //USUARIO
                 case 2:
-                    //primeiro -> sessão para validar login; dar opções de visualização da conta de acordo com o tipo_conta; OK
-                    //CRIAR FUNÇÃO PARA CHECKAR SE O USERNAME E A SENHA ESTÃO CORRETOS
                     sc.nextLine();
                     String username_login;
                     String senha_login;
@@ -221,7 +184,6 @@ public class Main {
                         conta_logado = contaDAO.contaLoga(username_login, senha_login);
                         try{
                             System.out.println("================= " + conta_logado.getUsername() + " está logado! =================");
-                            //System.out.println(conta_logado.getCod_conta());
                         }catch(NullPointerException e){
                             System.out.println("Usuario ou senha inválida");
                         }
@@ -229,17 +191,21 @@ public class Main {
 
                     double deposito;
                     double sacar;
-                    System.out.println("CODIGO DA CONTA" + conta_logado.getCod_conta());
                     System.out.println("Selecione a ação que deseja executar: ");
+                    System.out.println("0 - Sair: ");
                     System.out.println("1 - Depositar: ");
                     System.out.println("2 - Sacar: ");
                     System.out.println("3 - Mostrar saldo: ");
                     System.out.println("4 - Comprar ação: ");
                     System.out.println("5 - Vender ação: ");
                     System.out.println("6 - Mostrar ações que possuo: ");
-                    System.out.println("8 - Sair: ");
+                    System.out.println("7 - Pedir análise: ");
+                    System.out.println("8 - Pedir recomendação: ");
+                    System.out.println("9 - Conversar com conselheiro: ");
+                    System.out.println("10 - Chat com investidores: ");
+                    System.out.println("11 - Mostrar informações da conta: ");
                     op = sc.nextInt();
-                    while(op != 8){
+                    while(op != 0){
                         sc.nextLine();
                         switch(op){
                             case 1:
@@ -271,6 +237,7 @@ public class Main {
                                 break;
                             case 5:
                                 //vender açoes
+                                conta_logado.venderAcao(conta_logado);
                                 break;
 
                             case 6:
@@ -278,19 +245,49 @@ public class Main {
                                 conta_logado.mostra_acoes(conta_logado);
                                 break;
 
+                            case 7:
+                                //pedir análise
+                                conta_logado.pedir_analise();
+                                break;
+
+                            case 8:
+                                //pedir recomendação
+                                conta_logado.pedir_recomendacao();
+                                break;
+
+                            case 9:
+                                // conversar com conselheiro
+                                conta_logado.conversar_conselheiro();
+                                break;
+
+                            case 10:
+                                //chat_investidores
+                                conta_logado.chat_investidores();
+                                break;
+
+                            case 11:
+                                //mostra info
+                                conta_logado.mostrar_info();
+                                break;
                         }
 
                         System.out.println("Selecione a ação que deseja executar: ");
+                        System.out.println("0 - Sair: ");
                         System.out.println("1 - Depositar: ");
                         System.out.println("2 - Sacar: ");
                         System.out.println("3 - Mostrar saldo: ");
                         System.out.println("4 - Comprar ação: ");
                         System.out.println("5 - Vender ação: ");
                         System.out.println("6 - Mostrar ações que possuo: ");
-                        System.out.println("8 - Sair: ");
+                        System.out.println("7 - Pedir análise: ");
+                        System.out.println("8 - Pedir recomendação: ");
+                        System.out.println("9 - Conversar com conselheiro: ");
+                        System.out.println("10 - Chat com investidores: ");
+                        System.out.println("11 - Mostrar informações da conta: ");
+
                         op = sc.nextInt();
                     }
-                    break; //break do modo visu
+                    break; //break do modo visualizacao
 
             }
             System.out.println("Digite o modo de visualização: ");

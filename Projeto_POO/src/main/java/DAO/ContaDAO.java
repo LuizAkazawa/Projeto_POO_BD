@@ -1,6 +1,8 @@
 package DAO;
 
 import Modelos.*;
+import excecoes.NaoPossuiAcao;
+import excecoes.SaldoInsuficiente;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -149,6 +151,33 @@ public class ContaDAO extends ConnectionDAO{
         return sucesso;
     }
 
+    public boolean vendeConta_has_Acoes(Conta c, String sigla, int qtdAlterada) {
+
+        connectToDB();
+        Acao a = infoAcoes(sigla);
+
+        String sql = "UPDATE Conta_has_Acoes SET quantidade =? WHERE Conta_codConta =? and Acoes_siglaAcoes=?";
+        try {
+            pst = con.prepareStatement(sql);
+            pst.setInt(1, qtdAlterada);
+            pst.setInt(2, c.getCod_conta());
+            pst.setString(3, sigla);
+            updateConta_has_Acoes(c, sigla, qtdAlterada);
+            sucesso = true;
+        } catch (SQLException exc) {
+            System.out.println("Erro6_conta: " + exc.getMessage());
+            sucesso = false;
+        } finally {
+            try {
+                con.close();
+                pst.close();
+            } catch (SQLException exc) {
+                System.out.println("Erro7_conta: " + exc.getMessage());
+            }
+        }
+        return sucesso;
+    }
+
     /*
     //UPDATE
     public boolean updateConta(String cpf, String colunaMudanca, String novoDado) {
@@ -243,18 +272,61 @@ public class ContaDAO extends ConnectionDAO{
         }
     }
 
+    public double getPriceAcao(String sigla){
+        sigla = "'" + sigla + "'";
+        connectToDB();
+        String sql = "SELECT cotacao FROM Acoes WHERE sigla = " + sigla;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+            if(rs.next()){
+                return rs.getDouble("cotacao");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ErroGetPrice: " + e);
+        }
+        return -1;
+    }
+
+    public int checkQtdAcoes (Conta c, String sigla){
+        connectToDB();
+        sigla = "'" + sigla + "'";
+        String sql = "SELECT quantidade FROM Conta_has_Acoes WHERE Conta_codConta = " + c.getCod_conta() + " and Acoes_siglaAcoes = " + sigla;
+        try{
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+            if(rs.next()){
+                return rs.getInt("quantidade");
+            }
+        } catch (SQLException e) {
+            System.out.println("ErroCheckQtdAcoes: " + e);
+        }
+        return 0;
+    }
+
     public void mostraAcoesPossui(Conta c){
         connectToDB();
         String sql = "SELECT * FROM Conta_has_Acoes WHERE Conta_codConta = " + c.getCod_conta();
         try{
             st = con.createStatement();
             rs = st.executeQuery(sql);
+            String siglaAcao;
+            int qtd;
+            double teste;
+            System.out.println("===================================");
             while(rs.next()){
-                System.out.println(rs.getString("Acoes_siglaAcoes") + " : " + rs.getInt("quantidade"));
+                siglaAcao = rs.getString("Acoes_siglaAcoes");
+                //teste = getPriceAcao(siglaAcao);
+                qtd = rs.getInt("quantidade");
+                System.out.println(siglaAcao + " : " + qtd + " ações");
+                //System.out.println(teste);
+
             }
         } catch (SQLException e) {
-            System.out.println("ErroCheck: " + e);
+            System.out.println("ErroMostraAcao: " + e);
         }
+        System.out.println("===================================");
     }
 
     //SELECT

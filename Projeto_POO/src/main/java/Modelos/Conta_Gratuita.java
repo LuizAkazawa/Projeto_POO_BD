@@ -10,26 +10,34 @@ public class Conta_Gratuita extends Conta{
 
     @Override
     public void pedir_analise(){
+        System.out.println("===================================");
         System.out.println("Você não pode pedir análise! Faça o upgrade para a conta GOLD ou BLACK " +
                 "para habilitar essa função");
+        System.out.println("===================================");
     }
 
     @Override
     public void pedir_recomendacao(){
+        System.out.println("===================================");
         System.out.println("Você não pode pedir recomendação! Faça o upgrade para a conta GOLD ou BLACK " +
                 "para habilitar essa função");
+        System.out.println("===================================");
     }
 
     @Override
     public void conversar_conselheiro(){
+        System.out.println("===================================");
         System.out.println("Você não pode conversar com um conselheiro! Faça o upgrade para a conta BLACK " +
                 "para habilitar essa função");
+        System.out.println("===================================");
     }
 
     @Override
     public void chat_investidores(){
+        System.out.println("===================================");
         System.out.println("Você não pode entrar no chat com outros investidores! Faça o upgrade para a conta BLACK " +
                 "para habilitar essa função");
+        System.out.println("===================================");
     }
 
 }
