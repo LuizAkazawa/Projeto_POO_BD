@@ -57,9 +57,13 @@ public abstract class Conta {
         System.out.println("1 - Fleury");
         System.out.println("2 - Magalu");
         System.out.println("3 - Banco do Brasil");
+        System.out.println("4 - Gol");
+        System.out.println("5 - Lojas Renner");
+        System.out.println("6 - Cemig");
+        System.out.println("7 - Itaú");
         numAcao = sc.nextInt();
 
-        while (numAcao < 1 || numAcao > 3) {
+        while (numAcao < 1 || numAcao > 7) {
             System.out.println("Digite um numero valido: ");
             numAcao = sc.nextInt();
         }
@@ -73,6 +77,19 @@ public abstract class Conta {
             case 3:
                 sigla = "BBAS3";
                 break;
+            case 4:
+                sigla = "GOLL4";
+                break;
+            case 5:
+                sigla = "LREN3";
+                break;
+            case 6:
+                sigla = "CMIG4";
+                break;
+            case 7:
+                sigla = "ITUB4";
+                break;
+
         }
         System.out.println("Digite a quantidade: ");
         qtd = sc.nextInt();
@@ -102,9 +119,13 @@ public abstract class Conta {
         System.out.println("1 - Fleury");
         System.out.println("2 - Magalu");
         System.out.println("3 - Banco do Brasil");
+        System.out.println("4 - Gol");
+        System.out.println("5 - Lojas Renner");
+        System.out.println("6 - Cemig");
+        System.out.println("7 - Itaú");
         numAcao = sc.nextInt();
 
-        while (numAcao < 1 || numAcao > 3) {
+        while (numAcao < 1 || numAcao > 8) {
             System.out.println("Digite um numero valido: ");
             numAcao = sc.nextInt();
         }
@@ -118,6 +139,22 @@ public abstract class Conta {
             case 3:
                 sigla = "BBAS3";
                 break;
+            case 4:
+                sigla = "GOLL4";
+                break;
+            case 5:
+                sigla = "LREN3";
+                break;
+            case 6:
+                sigla = "CMIG4";
+                break;
+            case 7:
+                sigla = "ITUB4";
+                break;
+            case 8:
+                sigla = "AZUL4";
+                break;
+
         }
         System.out.println("Digite a quantidade: ");
         qtdVendida = sc.nextInt();

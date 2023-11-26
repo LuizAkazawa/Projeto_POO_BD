@@ -128,7 +128,6 @@ public class UserDAO extends ConnectionDAO{
     }
 
     //COLETA INFO
-
     public Usuario coletaInfo(String cpf) {
         Usuario userAux = null;
         connectToDB();

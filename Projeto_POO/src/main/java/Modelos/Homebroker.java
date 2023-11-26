@@ -46,7 +46,7 @@ public class Homebroker {
     }
 
 
-    public void registrarConta() { //NECESSÁRIO PASSAR O USUÁRIO PARA LINKAR O CPF DO USUÁRIO COM A CONTA
+    public void registrarConta() {
         String username;
         String senha;
         String tipo_conta;
@@ -101,15 +101,9 @@ public class Homebroker {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public String getIp() {
         return ip;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
 }

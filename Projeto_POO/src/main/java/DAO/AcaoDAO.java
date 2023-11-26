@@ -64,29 +64,6 @@ public class AcaoDAO extends ConnectionDAO{
         return sucesso;
     }
 
-    //DELETE
-    public boolean deleteAcao(String cpf) {
-        connectToDB();
-        String sql = "DELETE FROM acoes where cpf=?";
-        try {
-            pst = con.prepareStatement(sql);
-            pst.setString(1, cpf);
-            pst.execute();
-            sucesso = true;
-        } catch (SQLException ex) {
-            System.out.println("Erro = " + ex.getMessage());
-            sucesso = false;
-        } finally {
-            try {
-                con.close();
-                pst.close();
-            } catch (SQLException exc) {
-                System.out.println("Erro: " + exc.getMessage());
-            }
-        }
-        return sucesso;
-    }
-
     //SELECT
     public ArrayList<Acao> selectAcao() {
         ArrayList<Acao> users = new ArrayList<>();
@@ -103,13 +80,11 @@ public class AcaoDAO extends ConnectionDAO{
 
                 Acao userAux = new Acao(rs.getString("sigla"),rs.getDouble("cotacao"),rs.getString("empresa_proprietaria"));
 
-                System.out.println("Sigla = " + userAux.getSigla());
-                System.out.println("Cotação = " + userAux.getCotacao());
-                System.out.println("Empresa proprietária = " + userAux.getEmpresa_proprietaria());
-                System.out.println("--------------------------------");
+                System.out.println(userAux.getSigla() + " : R$" + userAux.getCotacao());
 
                 users.add(userAux);
             }
+            System.out.println("============================");
             sucesso = true;
         } catch (SQLException e) {
             System.out.println("Erro: " + e.getMessage());

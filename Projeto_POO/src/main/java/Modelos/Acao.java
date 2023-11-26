@@ -15,23 +15,11 @@ public class Acao {
         return sigla;
     }
 
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
-    }
-
     public double getCotacao() {
         return cotacao;
     }
 
-    public void setCotacao(double cotacao) {
-        this.cotacao = cotacao;
-    }
-
     public String getEmpresa_proprietaria() {
         return empresa_proprietaria;
-    }
-
-    public void setEmpresa_proprietaria(String empresa_proprietaria) {
-        this.empresa_proprietaria = empresa_proprietaria;
     }
 }

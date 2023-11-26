@@ -44,6 +44,7 @@ public class ContaDAO extends ConnectionDAO{
         return sucesso;
     }
 
+    //COLETA TODAS AS INFORMAÇÕES DA AÇÃO QUE POSSUI A SIGLA DIGITADA
     public Acao infoAcoes(String sigla){
         connectToDB();
         sigla = "'" + sigla + "'";
@@ -61,7 +62,7 @@ public class ContaDAO extends ConnectionDAO{
         }
     }
 
-
+    //RETORNA A QUANTIDADE DE AÇÕES DA SIGLA DIGITADA
     public Acao qtdAcoes(Conta c, String sigla){
 
         connectToDB();
@@ -79,6 +80,7 @@ public class ContaDAO extends ConnectionDAO{
         }
     }
 
+    //CONFERE SE A QUANTIDADE DE AÇÕES DA SIGLA DIGITADA QUE A CONTA POSSUI
     public int  hasAcoes(Conta c, String sigla){
         connectToDB();
         sigla = "'" + sigla + "'";
@@ -96,6 +98,7 @@ public class ContaDAO extends ConnectionDAO{
         return 0;
     }
 
+    //MÉTODO PARA AUXILIAR NA COMPRA DAS AÇÕES
     public boolean updateConta_has_Acoes(Conta c, String sigla, int qtd) {
         connectToDB();
         String sql = "UPDATE Conta_has_Acoes SET quantidade=? where Acoes_siglaAcoes=? and Conta_codConta=?";
@@ -120,6 +123,7 @@ public class ContaDAO extends ConnectionDAO{
         return sucesso;
     }
 
+    //MÉTODO PARA AUXILIAR NA COMPRA
     public boolean insertConta_has_Acoes(Conta c, String sigla, int qtd) {
 
         connectToDB();
@@ -128,11 +132,11 @@ public class ContaDAO extends ConnectionDAO{
         String sql = "INSERT INTO Conta_has_Acoes (Conta_codConta, Acoes_siglaAcoes, quantidade) values(?,?,?)";
         try {
             pst = con.prepareStatement(sql);
-            pst.setInt(1, c.getCod_conta());
-            pst.setString(2, a.getSigla());
             if(hasAcoes(c, sigla) != 0){
                 updateConta_has_Acoes(c, sigla, qtd + hasAcoes(c, sigla));
             }else{
+                pst.setInt(1, c.getCod_conta());
+                pst.setString(2, a.getSigla());
                 pst.setInt(3, qtd);
                 pst.execute();
             }
@@ -151,6 +155,7 @@ public class ContaDAO extends ConnectionDAO{
         return sucesso;
     }
 
+    //MÉTODO PARA AUXILIAR NA VENDA DAS AÇÕES
     public boolean vendeConta_has_Acoes(Conta c, String sigla, int qtdAlterada) {
 
         connectToDB();
@@ -177,38 +182,6 @@ public class ContaDAO extends ConnectionDAO{
         }
         return sucesso;
     }
-
-    /*
-    //UPDATE
-    public boolean updateConta(String cpf, String colunaMudanca, String novoDado) {
-        connectToDB();
-
-        String sql = "UPDATE conta SET " + colunaMudanca + " =? where Usuario_cpfUsuario =?";
-        try {
-            pst = con.prepareStatement(sql);
-            pst.setInt(1, c.getCod_conta());
-            pst.setString(2, c.getUsername());
-            pst.setString(3, c.getSenha());
-            pst.setString(4, c.getTipo_conta());
-            pst.setDate(5, c.getData_criacao());
-            pst.setDouble(6, c.getSaldo());
-            pst.setString(7, c.getCpfUsuario());
-            pst.execute();
-            sucesso = true;
-        } catch (SQLException ex) {
-            System.out.println("Erro = " + ex.getMessage());
-            sucesso = false;
-        } finally {
-            try {
-                con.close();
-                pst.close();
-            } catch (SQLException exc) {
-                System.out.println("Erro: " + exc.getMessage());
-            }
-        }
-        return sucesso;
-    }
-    */
 
     public boolean updateConta(String cpf, String mudaColuna, String mudanca) {
         connectToDB();
@@ -257,38 +230,7 @@ public class ContaDAO extends ConnectionDAO{
         return sucesso;
     }
 
-    //TYPE CHECK
-    public String checkTipo(Conta c){
-        connectToDB();
-        String sql = "SELECT tipo_conta FROM conta WHERE Usuario_cpfUsuario = " + c.getCpfUsuario();
-        try{
-            st = con.createStatement();
-            rs = st.executeQuery(sql);
-            rs.next();
-            return rs.getString("tipo_conta");
-        } catch (SQLException e) {
-            System.out.println("ErroCheck: " + e);
-            return null;
-        }
-    }
-
-    public double getPriceAcao(String sigla){
-        sigla = "'" + sigla + "'";
-        connectToDB();
-        String sql = "SELECT cotacao FROM Acoes WHERE sigla = " + sigla;
-        try{
-            st = con.createStatement();
-            rs = st.executeQuery(sql);
-            if(rs.next()){
-                return rs.getDouble("cotacao");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("ErroGetPrice: " + e);
-        }
-        return -1;
-    }
-
+    //CHECA QUANTAS AÇÕES COMPRADAS A CONTA TEM DA AÇÃO "sigla"
     public int checkQtdAcoes (Conta c, String sigla){
         connectToDB();
         sigla = "'" + sigla + "'";
@@ -305,6 +247,7 @@ public class ContaDAO extends ConnectionDAO{
         return 0;
     }
 
+    //MOSTRA AS AÇÕES QUE A CONTA POSSUI
     public void mostraAcoesPossui(Conta c){
         connectToDB();
         String sql = "SELECT * FROM Conta_has_Acoes WHERE Conta_codConta = " + c.getCod_conta();
@@ -383,6 +326,7 @@ public class ContaDAO extends ConnectionDAO{
         return contas;
     }
 
+    //VERIFICA OS DADOS NO LOGIN
     public Conta contaLoga(String usuario, String senha) {
         Conta contaAux = null;
         connectToDB();
@@ -400,18 +344,11 @@ public class ContaDAO extends ConnectionDAO{
                 if(rs.getString("tipo_conta").equals("Gratuita")){
                     contaAux = new Conta_Gratuita(rs.getString("username"),rs.getString("senha"),rs.getString("tipo_conta"), rs.getDouble("saldo"), rs.getString("data_criacao"), rs.getString("Usuario_cpfUsuario"));
                 }else if(rs.getString("tipo_conta").equals("Gold")){
-                    contaAux = new Conta_Black(rs.getString("username"),rs.getString("senha"),rs.getString("tipo_conta"), rs.getDouble("saldo"), rs.getString("data_criacao"), rs.getString("Usuario_cpfUsuario"));
+                    contaAux = new Conta_Gold(rs.getString("username"),rs.getString("senha"),rs.getString("tipo_conta"), rs.getDouble("saldo"), rs.getString("data_criacao"), rs.getString("Usuario_cpfUsuario"));
                 }else if(rs.getString("tipo_conta").equals("Black")){
                     contaAux = new Conta_Black(rs.getString("username"),rs.getString("senha"),rs.getString("tipo_conta"), rs.getDouble("saldo"), rs.getString("data_criacao"), rs.getString("Usuario_cpfUsuario"));
                 }
                 contaAux.setCod_conta(rs.getInt("cod_conta"));
-/*
-                System.out.println("nome = " + contaAux.getNome());
-                System.out.println("cpf = " + contaAux.getCpf());
-                System.out.println("data_nascimento = " + contaAux.getData_nasc());
-                System.out.println("IP HOMEBROKER = " + contaAux.getIpHomebroker());
-                System.out.println("--------------------------------");
- */
             }
             sucesso = true;
         } catch (SQLException e) {
@@ -427,12 +364,4 @@ public class ContaDAO extends ConnectionDAO{
         }
         return contaAux;
     }
-
-    public void comprarAcao(String sigla, int qtd){
-
-    }
-    public void venderAcao(Conta c, String sigla, int qtd){
-
-    }
-
 }

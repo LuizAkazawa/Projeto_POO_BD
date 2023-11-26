@@ -1,5 +1,6 @@
 package DAO;
 
+import Modelos.Acao;
 import Modelos.Homebroker;
 
 import java.sql.SQLException;
@@ -36,89 +37,20 @@ public class HomebrokerDAO extends ConnectionDAO{
         return sucesso;
     }
 
-    //UPDATE
-    public boolean updateUser(String ip, Homebroker hb) {
+    public Homebroker loginHomebroker(){
         connectToDB();
-        String sql = "UPDATE homebroker SET ip=?, url=?, where id=?";
-        try {
-            pst = con.prepareStatement(sql);
-            pst.setString(1, hb.getIp());
-            pst.setString(2, hb.getUrl());
-            pst.setString(3,ip);
-            pst.execute();
-            sucesso = true;
-        } catch (SQLException ex) {
-            System.out.println("Erro = " + ex.getMessage());
-            sucesso = false;
-        } finally {
-            try {
-                con.close();
-                pst.close();
-            } catch (SQLException exc) {
-                System.out.println("Erro: " + exc.getMessage());
-            }
-        }
-        return sucesso;
-    }
-
-    //DELETE
-    public boolean deleteUser(String ip) {
-        connectToDB();
-        String sql = "DELETE FROM homebroker where ip=?";
-        try {
-            pst = con.prepareStatement(sql);
-            pst.setString(1, ip);
-            pst.execute();
-            sucesso = true;
-        } catch (SQLException ex) {
-            System.out.println("Erro = " + ex.getMessage());
-            sucesso = false;
-        } finally {
-            try {
-                con.close();
-                pst.close();
-            } catch (SQLException exc) {
-                System.out.println("Erro: " + exc.getMessage());
-            }
-        }
-        return sucesso;
-    }
-
-    //SELECT
-    public ArrayList<Homebroker> selectUser() {
-        ArrayList<Homebroker> hbs = new ArrayList<>();
-        connectToDB();
-        String sql = "SELECT * FROM homebroker";
-
-        try {
+        Homebroker h1 = null;
+        String sql = "SELECT * FROM Homebroker WHERE ip = 1" ;
+        try{
             st = con.createStatement();
             rs = st.executeQuery(sql);
-
-            System.out.println("Lista de hb's: ");
-
-            while (rs.next()) {
-
-                Homebroker hbAux = new Homebroker(rs.getString("ip"),rs.getString("url"));
-
-                System.out.println("ip = " + hbAux.getIp());
-                System.out.println("url = " + hbAux.getUrl());
-                System.out.println("--------------------------------");
-
-                hbs.add(hbAux);
-            }
-            sucesso = true;
+            rs.next();
+            h1 = new Homebroker(rs.getString("url"), rs.getString("ip"));
+            return h1;
         } catch (SQLException e) {
-            System.out.println("Erro: " + e.getMessage());
-            sucesso = false;
-        } finally {
-            try {
-                con.close();
-                st.close();
-            } catch (SQLException e) {
-                System.out.println("Erro: " + e.getMessage());
-            }
+            System.out.println("ErroLogin_homebroker: " + e);
+            return null;
         }
-        return hbs;
     }
 
 }
