@@ -1,7 +1,8 @@
+#Nome : Luiz Eduardo Akazawa Nora
+#Matricula : 220
+
 DROP SCHEMA IF EXISTS Investimentos;
-
 CREATE SCHEMA IF NOT EXISTS Investimentos;
-
 use Investimentos;
 
 CREATE TABLE IF NOT EXISTS Homebroker(
@@ -64,22 +65,30 @@ CREATE TABLE IF NOT EXISTS Conta_has_Acoes (
     
 );
 
-
+#CRIANDO HOMEBROKER
 INSERT INTO Homebroker (url, ip) values ("www.naosei.com", "1");
 
+#CRIANDO USUARIOS
 INSERT INTO Usuario (nome,email,cpf,data_nascimento,Homebroker_ipHomebroker) values 
-("Luiz Akazawa", "luiz@gmail.com","123", "2023-11-20", "1"),
-("Maria Seilá", "maria@gmail.com", "3123","2023-11-20", "1");
+("Luiz Akazawa", "luiz@gmail.com","1234", "2023-11-20", "1"),
+("Maria Seilá", "maria@gmail.com", "3123","2022-09-10", "1"),
+("Joaquina José", "joaquina@hotmail.com", "4567","2021-04-14", "1");
 
+#CRIANDO CONTAS
 INSERT INTO Conta (username,senha,tipo_conta,saldo,data_criacao,Usuario_cpfUsuario) values 
-("Luiz", "1", "Black", 12345.20, "2023-11-12", "123"),
-("Marie", "54321", "Gold", 145.20, "2023-11-30", "3123");
+("Luiz", "1", "Black", 12345.20, "2023-11-12", "1234"),
+("Marie", "2", "Gold", 145.20, "2023-11-30", "3123"),
+("Joaquina", "3", "Gratuita", 348.90, "2023-11-30", "4567");
 
+#CRIANDO AÇÕES
 INSERT INTO Acoes (sigla,cotacao,empresa_proprietaria) values
 ("FLRY3", 20.34, "Fleury"),
 ("MGLU3", 2.22, "Magazine Luiza"),
-("BBAS3", 50.66, "Banco do Brasil")
-;
+("BBAS3", 50.66, "Banco do Brasil"),
+("GOLL4", 9.10, "Gol"),
+("LREN3", 14.60, "Lojas Renner"),
+("CMIG4", 10.56, "Cemig"),
+("ITUB4", 30.68, "Itau");
 
 select * from conta;
 select * from usuario;
